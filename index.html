@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Something for you</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Karla:wght@400;600&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EBE5F3;
+    --ink:#17123A;
+    --pink:#FF4D8D;
+    --blue:#2E4BFF;
+    --mint:#6FDCC0;
+    --shadow: 6px 6px 0 var(--ink);
+    --r: 18px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:"Karla",system-ui,sans-serif;
+    color:var(--ink);
+    background-color:var(--paper);
+    background-image:radial-gradient(var(--ink) 0.7px, transparent 0.8px);
+    background-size:11px 11px;
+    background-position:0 0;
+    display:flex; align-items:center; justify-content:center;
+    padding:28px 20px 44px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .stage{width:100%; max-width:820px}
+
+  /* screens */
+  .screen{display:none; flex-direction:column; align-items:center; text-align:center}
+  .screen.is-active{display:flex; animation:rise .45s cubic-bezier(.2,.9,.3,1.2) both}
+  @keyframes rise{from{opacity:0; transform:translateY(18px) scale(.98)} to{opacity:1; transform:none}}
+
+  .eyebrow{
+    font-family:"Karla"; font-weight:600; font-size:.72rem; letter-spacing:.22em;
+    text-transform:uppercase; color:var(--blue);
+    border:2px solid var(--blue); border-radius:999px; padding:6px 14px; margin-bottom:22px;
+    background:var(--paper);
+  }
+  h1{
+    font-family:"Bricolage Grotesque",sans-serif; font-weight:800;
+    font-size:clamp(2.1rem,7.5vw,4rem); line-height:.98; letter-spacing:-.03em;
+    max-width:14ch;
+  }
+  h1 em{font-style:normal; color:var(--pink); position:relative; white-space:nowrap}
+  h1 em::after{
+    content:""; position:absolute; left:-2%; right:-2%; bottom:.08em; height:.16em;
+    background:var(--mint); z-index:-1; transform:rotate(-1.2deg);
+  }
+  .sub{margin-top:16px; font-size:1.02rem; line-height:1.55; max-width:34ch; opacity:.82}
+
+  /* buttons */
+  .row{display:flex; gap:14px; flex-wrap:wrap; justify-content:center; margin-top:30px}
+  button, .btn{
+    font-family:"Bricolage Grotesque",sans-serif; font-weight:700; font-size:1.02rem;
+    color:var(--ink); background:#fff; border:2.5px solid var(--ink); border-radius:999px;
+    padding:14px 26px; cursor:pointer; box-shadow:var(--shadow);
+    text-decoration:none; display:inline-block;
+    transition:transform .14s ease, box-shadow .14s ease, background .14s ease;
+  }
+  button:hover,.btn:hover{transform:translate(3px,3px); box-shadow:3px 3px 0 var(--ink)}
+  button:active,.btn:active{transform:translate(6px,6px); box-shadow:0 0 0 var(--ink)}
+  .primary{background:var(--pink); color:#fff}
+  .ghost{background:transparent; box-shadow:3px 3px 0 var(--ink)}
+  :focus-visible{outline:3px dashed var(--blue); outline-offset:4px}
+
+  /* critters — real photos in a circular riso frame */
+  .critter{
+    --ring:var(--pink);
+    margin-top:34px; width:132px; aspect-ratio:1; border-radius:50%;
+    border:3px solid var(--ink); background:#fff; overflow:hidden;
+    box-shadow:5px 5px 0 var(--ring);
+    animation:bob 4.2s ease-in-out infinite;
+  }
+  .critter[data-animal^="dog"]{--ring:var(--blue)}
+  .critter[data-animal="cat-wink"]{--ring:var(--mint)}
+  .critter img, .critter svg{width:100%; height:100%; object-fit:cover; display:block}
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(-2deg)} 50%{transform:translateY(-9px) rotate(2deg)}}
+
+  /* menu cards */
+  .cards{display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:34px; width:100%}
+  .card{
+    background:#fff; border:2.5px solid var(--ink); border-radius:var(--r);
+    box-shadow:var(--shadow); padding:22px 16px 18px; cursor:pointer; text-align:center;
+    display:flex; flex-direction:column; align-items:center; gap:8px;
+  }
+  .card:nth-child(1){transform:rotate(-2deg)}
+  .card:nth-child(2){transform:rotate(1.2deg)}
+  .card:nth-child(3){transform:rotate(-1deg)}
+  .card:hover{transform:rotate(0deg) translateY(-6px); box-shadow:9px 9px 0 var(--ink); background:#fff}
+  .card .icon{width:64px; height:64px}
+  .card h3{font-family:"Bricolage Grotesque"; font-weight:800; font-size:1.22rem; letter-spacing:-.02em}
+  .card p{font-size:.86rem; opacity:.7; line-height:1.4}
+  .card .critter{margin-top:8px; width:78px; box-shadow:3px 3px 0 var(--ring)}
+
+  /* panels */
+  .panel{
+    background:#fff; border:2.5px solid var(--ink); border-radius:var(--r);
+    box-shadow:var(--shadow); padding:26px; width:100%; text-align:left; margin-top:8px;
+  }
+  .frame{background:#fff; padding:14px 14px 54px; border:2.5px solid var(--ink); border-radius:6px;
+    box-shadow:var(--shadow); transform:rotate(-1.5deg); max-width:420px; margin:0 auto; position:relative}
+  .frame img{width:100%; display:block; border-radius:2px}
+  .frame .ph{aspect-ratio:4/5; display:flex; align-items:center; justify-content:center; text-align:center;
+    border:2.5px dashed var(--blue); border-radius:4px; padding:20px; font-size:.9rem; color:var(--blue); line-height:1.5}
+  .frame figcaption{font-family:"Caveat"; font-size:1.5rem; position:absolute; left:0; right:0; bottom:12px; text-align:center}
+  .letter{font-family:"Caveat",cursive; font-size:1.45rem; line-height:1.75; white-space:pre-line;
+    background:#fff; background-image:repeating-linear-gradient(transparent,transparent 41px,#DDD7EA 42px);
+    padding:8px 4px}
+  .tape{position:absolute; top:-14px; left:50%; transform:translateX(-50%) rotate(-3deg);
+    width:110px; height:28px; background:var(--mint); border:2px solid var(--ink); opacity:.95}
+  .videobox{aspect-ratio:16/9; border:2.5px solid var(--ink); border-radius:10px; background:var(--ink);
+    display:flex; align-items:center; justify-content:center; color:#fff; text-align:center; padding:20px}
+  .back{margin-top:26px}
+  .shake{animation:shake .5s ease-in-out both}
+  @keyframes shake{10%,90%{transform:translateX(-3px)}20%,80%{transform:translateX(5px)}30%,50%,70%{transform:translateX(-8px)}40%,60%{transform:translateX(8px)}}
+
+  @media (max-width:640px){
+    .cards{grid-template-columns:1fr}
+    .card{transform:none !important}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none !important; transition:none !important}
+  }
+</style>
+</head>
+<body>
+<main class="stage">
+
+  <!-- 1. ASK -->
+  <section class="screen is-active" id="ask">
+    <span class="eyebrow">Knock knock</span>
+    <h1>I made <em>something</em> for you.</h1>
+    <p class="sub">It took a while. There are three things inside. Want to see?</p>
+    <div class="row">
+      <button class="primary" data-go="menu">Yes, show me</button>
+      <button class="ghost" data-go="no">No</button>
+    </div>
+    <div class="critter" data-animal="cat"></div>
+  </section>
+
+  <!-- 2. NO -->
+  <section class="screen" id="no">
+    <span class="eyebrow" style="color:var(--pink); border-color:var(--pink)">Betrayal</span>
+    <h1>How <em>dare</em> you.</h1>
+    <p class="sub">I sat here choosing fonts for you. The audacity is genuinely stunning.</p>
+    <div class="row">
+      <button class="primary" data-go="ask">Okay okay, go back</button>
+    </div>
+    <div class="critter" data-animal="dog-sad"></div>
+  </section>
+
+  <!-- 3. MENU -->
+  <section class="screen" id="menu">
+    <span class="eyebrow">Pick one</span>
+    <h1>Three <em>things</em>, in no order.</h1>
+    <div class="cards">
+      <article class="card" tabindex="0" role="button" data-go="photo">
+        <svg class="icon" viewBox="0 0 64 64" fill="none"><rect x="4" y="16" width="56" height="40" rx="8" fill="#FF4D8D" stroke="#17123A" stroke-width="3"/><path d="M22 16l4-8h12l4 8" fill="#fff" stroke="#17123A" stroke-width="3" stroke-linejoin="round"/><circle cx="32" cy="36" r="12" fill="#fff" stroke="#17123A" stroke-width="3"/><circle cx="32" cy="36" r="5" fill="#6FDCC0" stroke="#17123A" stroke-width="2.5"/></svg>
+        <h3>A photo</h3>
+        <p>The one I kept.</p>
+        <div class="critter" data-animal="cat"></div>
+      </article>
+      <article class="card" tabindex="0" role="button" data-go="letter">
+        <svg class="icon" viewBox="0 0 64 64" fill="none"><rect x="5" y="14" width="54" height="38" rx="6" fill="#6FDCC0" stroke="#17123A" stroke-width="3"/><path d="M6 18l26 20 26-20" stroke="#17123A" stroke-width="3" stroke-linejoin="round" fill="none"/><circle cx="32" cy="44" r="7" fill="#FF4D8D" stroke="#17123A" stroke-width="3"/></svg>
+        <h3>A letter</h3>
+        <p>Read it slowly.</p>
+        <div class="critter" data-animal="dog"></div>
+      </article>
+      <article class="card" tabindex="0" role="button" data-go="video">
+        <svg class="icon" viewBox="0 0 64 64" fill="none"><rect x="4" y="14" width="42" height="36" rx="8" fill="#2E4BFF" stroke="#17123A" stroke-width="3"/><path d="M46 32l14-10v30l-14-10z" fill="#FF4D8D" stroke="#17123A" stroke-width="3" stroke-linejoin="round"/><path d="M21 24l12 8-12 8z" fill="#fff" stroke="#17123A" stroke-width="2.5" stroke-linejoin="round"/></svg>
+        <h3>A video</h3>
+        <p>Sound on for this one.</p>
+        <div class="critter" data-animal="cat-wink"></div>
+      </article>
+    </div>
+    <button class="ghost back" data-go="ask">Back to the start</button>
+  </section>
+
+  <!-- 4a. PHOTO -->
+  <section class="screen" id="photo">
+    <span class="eyebrow">Exhibit A</span>
+    <h1>This <em>one</em>.</h1>
+    <div class="panel" style="background:transparent; border:none; box-shadow:none; padding:14px 0">
+      <figure class="frame" id="frame">
+        <div class="tape"></div>
+        <div class="ph" id="photoSlot">Paste a photo link into <b>PHOTO_URL</b> at the bottom of the file and it appears right here.</div>
+        <figcaption id="photoCaption">still my favourite</figcaption>
+      </figure>
+    </div>
+    <button class="ghost back" data-go="menu">Back to the three things</button>
+  </section>
+
+  <!-- 4b. LETTER -->
+  <section class="screen" id="letter">
+    <span class="eyebrow">Exhibit B</span>
+    <h1>A <em>letter</em>, unedited.</h1>
+    <div class="panel">
+      <div class="letter" id="letterText"></div>
+    </div>
+    <div class="critter" data-animal="dog" style="width:90px"></div>
+    <button class="ghost back" data-go="menu">Back to the three things</button>
+  </section>
+
+  <!-- 4c. VIDEO -->
+  <section class="screen" id="video">
+    <span class="eyebrow">Exhibit C</span>
+    <h1>Press <em>play</em>, please.</h1>
+    <div class="panel">
+      <div class="videobox">
+        <div>
+          <p style="font-family:'Bricolage Grotesque'; font-weight:800; font-size:1.3rem; margin-bottom:6px">One video, made for you</p>
+          <p style="opacity:.75; font-size:.9rem">Opens in a new tab.</p>
+        </div>
+      </div>
+      <div class="row" style="margin-top:22px">
+        <a class="btn primary" id="videoLink" href="#" target="_blank" rel="noopener">Watch it</a>
+      </div>
+    </div>
+    <div class="critter" data-animal="cat-wink" style="width:90px"></div>
+    <button class="ghost back" data-go="menu">Back to the three things</button>
+  </section>
+
+</main>
+
+<script>
+/* ─────────────────────────────────────────────
+   EDIT THESE FOUR THINGS — that's the whole job
+   ───────────────────────────────────────────── */
+const PHOTO_URL   = "";                     // e.g. "https://i.imgur.com/abc123.jpg"
+const PHOTO_CAPTION = "still my favourite";
+const VIDEO_URL   = "";                     // e.g. a YouTube / Drive link
+const LETTER = `Hey,
+
+I'm not great at saying this out loud, so I built a whole website instead. That should tell you something.
+
+Thank you for the ridiculous voice notes, for showing up when it wasn't convenient, and for laughing at jokes that did not deserve it.
+
+Here's to another year of you. I hope it's kind to you.
+
+— me`;
+/* ───────────────────────────────────────────── */
+
+const critters = {
+  cat: `<svg viewBox="0 0 100 100" fill="none"><path d="M22 40 18 16l20 12M78 40 82 16 62 28" fill="#FF4D8D" stroke="#17123A" stroke-width="4" stroke-linejoin="round"/><ellipse cx="50" cy="58" rx="34" ry="30" fill="#FF4D8D" stroke="#17123A" stroke-width="4"/><path d="M36 54c3 4 7 4 10 0M54 54c3 4 7 4 10 0" stroke="#17123A" stroke-width="4" stroke-linecap="round"/><path d="M46 66h8l-4 5z" fill="#17123A"/><path d="M14 62h14M14 70h14M72 62h14M72 70h14" stroke="#17123A" stroke-width="3" stroke-linecap="round"/></svg>`,
+  "cat-wink": `<svg viewBox="0 0 100 100" fill="none"><path d="M22 40 18 16l20 12M78 40 82 16 62 28" fill="#6FDCC0" stroke="#17123A" stroke-width="4" stroke-linejoin="round"/><ellipse cx="50" cy="58" rx="34" ry="30" fill="#6FDCC0" stroke="#17123A" stroke-width="4"/><circle cx="41" cy="55" r="4" fill="#17123A"/><path d="M54 54c3 4 7 4 10 0" stroke="#17123A" stroke-width="4" stroke-linecap="round"/><path d="M46 66h8l-4 5z" fill="#17123A"/><path d="M14 62h14M72 62h14" stroke="#17123A" stroke-width="3" stroke-linecap="round"/></svg>`,
+  dog: `<svg viewBox="0 0 100 100" fill="none"><ellipse cx="20" cy="52" rx="11" ry="22" fill="#2E4BFF" stroke="#17123A" stroke-width="4"/><ellipse cx="80" cy="52" rx="11" ry="22" fill="#2E4BFF" stroke="#17123A" stroke-width="4"/><ellipse cx="50" cy="54" rx="32" ry="29" fill="#2E4BFF" stroke="#17123A" stroke-width="4"/><circle cx="40" cy="48" r="4.5" fill="#17123A"/><circle cx="60" cy="48" r="4.5" fill="#17123A"/><ellipse cx="50" cy="66" rx="15" ry="11" fill="#fff" stroke="#17123A" stroke-width="3.5"/><ellipse cx="50" cy="61" rx="5" ry="4" fill="#17123A"/><path d="M50 65v5" stroke="#17123A" stroke-width="3" stroke-linecap="round"/><path d="M46 74c3 4 5 4 8 0" stroke="#17123A" stroke-width="3" stroke-linecap="round"/></svg>`,
+  "dog-sad": `<svg viewBox="0 0 100 100" fill="none"><ellipse cx="20" cy="56" rx="11" ry="24" fill="#FF4D8D" stroke="#17123A" stroke-width="4"/><ellipse cx="80" cy="56" rx="11" ry="24" fill="#FF4D8D" stroke="#17123A" stroke-width="4"/><ellipse cx="50" cy="54" rx="32" ry="29" fill="#FF4D8D" stroke="#17123A" stroke-width="4"/><circle cx="40" cy="48" r="5" fill="#17123A"/><circle cx="60" cy="48" r="5" fill="#17123A"/><path d="M33 40c3-3 8-3 11 0M56 40c3-3 8-3 11 0" stroke="#17123A" stroke-width="3.5" stroke-linecap="round"/><ellipse cx="50" cy="67" rx="15" ry="10" fill="#fff" stroke="#17123A" stroke-width="3.5"/><ellipse cx="50" cy="62" rx="5" ry="4" fill="#17123A"/><path d="M45 73c3-3 7-3 10 0" stroke="#17123A" stroke-width="3" stroke-linecap="round"/><circle cx="30" cy="62" r="3" fill="#2E4BFF"/></svg>`
+};
+
+/* Real photos. Swap any of these for your own image links if you'd rather
+   pick the pets yourself — the drawings load automatically if a photo fails. */
+const PET_PHOTOS = {
+  cat:        "https://cataas.com/cat/cute?width=600&height=600",
+  "cat-wink": "https://cataas.com/cat/cute?width=600&height=600&v=2",
+  dog:        "https://placedog.net/600/600?id=76",
+  "dog-sad":  "https://placedog.net/600/600?id=142"
+};
+
+document.querySelectorAll('.critter').forEach(el=>{
+  const kind = el.dataset.animal;
+  const drawing = () => { el.innerHTML = critters[kind] || critters.cat; };
+  const url = PET_PHOTOS[kind];
+  if(!url){ drawing(); return; }
+  const img = new Image();
+  img.alt = kind.startsWith('dog') ? "a very good dog" : "a cute cat";
+  img.onerror = drawing;
+  img.src = url + (url.includes('?') ? '&' : '?') + 't=' + Date.now();
+  drawing();                     // show the drawing while the photo loads
+  img.onload = () => { el.innerHTML = ''; el.appendChild(img); };
+});
+
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('is-active'));
+  const next = document.getElementById(id);
+  next.classList.add('is-active');
+  if(id === 'no'){
+    const h = next.querySelector('h1');
+    h.classList.remove('shake'); void h.offsetWidth; h.classList.add('shake');
+  }
+  window.scrollTo({top:0, behavior:'smooth'});
+  next.querySelector('button, .btn, [tabindex]')?.focus({preventScroll:true});
+}
+
+document.addEventListener('click', e=>{
+  const t = e.target.closest('[data-go]');
+  if(t) show(t.dataset.go);
+});
+document.addEventListener('keydown', e=>{
+  if((e.key === 'Enter' || e.key === ' ') && e.target.matches('.card')){
+    e.preventDefault(); show(e.target.dataset.go);
+  }
+});
+
+// fill in the personal bits
+document.getElementById('letterText').textContent = LETTER;
+document.getElementById('photoCaption').textContent = PHOTO_CAPTION;
+if(PHOTO_URL){
+  const slot = document.getElementById('photoSlot');
+  const img = new Image();
+  img.src = PHOTO_URL; img.alt = "A photo of you";
+  slot.replaceWith(img);
+}
+const v = document.getElementById('videoLink');
+if(VIDEO_URL){ v.href = VIDEO_URL; }
+else { v.textContent = "Add your video link first"; v.style.opacity = ".65"; }
+</script>
+</body>
+</html>
