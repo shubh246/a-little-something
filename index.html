@@ -9,13 +9,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Quicksand:wght@400;500;600&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink:#4A3348;
-    --soft:#7A6076;
-    --rose:#E8738D;
-    --lilac:#A98CD9;
-    --sage:#8FCFB6;
-    --gold:#F0BE5C;
-    --card:#FFFCFA;
+    --ink:#4A3348; --soft:#7A6076; --rose:#E8738D; --lilac:#A98CD9;
+    --sage:#8FCFB6; --gold:#F0BE5C; --card:#FFFCFA;
     --line:rgba(74,51,72,.16);
     --shadow:0 14px 32px rgba(140,86,124,.15);
     --shadow-sm:0 6px 16px rgba(140,86,124,.13);
@@ -35,27 +30,22 @@
     -webkit-font-smoothing:antialiased;
   }
   .stage{width:100%; max-width:760px}
+  [hidden]{display:none !important}
 
   .screen{display:none; flex-direction:column; align-items:center; text-align:center}
   .screen.is-active{display:flex; animation:rise .55s cubic-bezier(.2,.8,.3,1) both}
   @keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 
   .eyebrow{
-    font-family:"Quicksand"; font-weight:600; font-size:.68rem; letter-spacing:.28em;
-    text-transform:uppercase; color:var(--soft);
+    font-weight:600; font-size:.68rem; letter-spacing:.28em; text-transform:uppercase; color:var(--soft);
     padding:7px 16px; margin-bottom:18px; border-radius:999px;
     background:rgba(255,255,255,.6); border:1px solid var(--line);
   }
-  h1{
-    font-family:"Fraunces",Georgia,serif; font-weight:500;
-    font-size:clamp(2rem,7.4vw,3.5rem); line-height:1.08; letter-spacing:-.015em; max-width:16ch;
-  }
-  h1 em{font-family:"Fraunces"; font-style:italic; font-weight:500; color:var(--rose); position:relative}
-  h1 em::after{
-    content:""; position:absolute; left:0; right:0; bottom:-.06em; height:.5em;
-    background:radial-gradient(ellipse at 50% 0%, rgba(255,196,213,.85), transparent 70%);
-    z-index:-1;
-  }
+  h1{font-family:"Fraunces",Georgia,serif; font-weight:500;
+     font-size:clamp(2rem,7.4vw,3.5rem); line-height:1.08; letter-spacing:-.015em; max-width:16ch}
+  h1 em{font-style:italic; font-weight:500; color:var(--rose); position:relative}
+  h1 em::after{content:""; position:absolute; left:0; right:0; bottom:-.06em; height:.5em; z-index:-1;
+    background:radial-gradient(ellipse at 50% 0%, rgba(255,196,213,.85), transparent 70%)}
   .sub{margin-top:15px; font-size:1.02rem; line-height:1.6; max-width:33ch; color:var(--soft)}
   .hint{margin-top:20px; font-family:"Caveat",cursive; font-size:1.45rem; color:var(--rose); min-height:1.6em}
 
@@ -71,14 +61,12 @@
   button:active,.btn:active{transform:translateY(-1px)}
   .primary{background:linear-gradient(150deg,#F08CA3,#E8738D); color:#fff; border-color:transparent;
     box-shadow:0 10px 24px rgba(232,115,141,.36)}
-  .primary:hover{box-shadow:0 16px 32px rgba(232,115,141,.42)}
   .ghost{background:rgba(255,255,255,.55)}
   :focus-visible{outline:2px solid var(--lilac); outline-offset:4px}
 
   #noBtn.loose{position:fixed; z-index:60; margin:0;
     transition:left .18s cubic-bezier(.3,1.2,.4,1), top .18s cubic-bezier(.3,1.2,.4,1), transform .18s ease}
 
-  /* pets */
   .critter{--ring:rgba(232,115,141,.35); margin-top:30px; width:120px; aspect-ratio:1; border-radius:50%;
     border:5px solid var(--card); background:var(--card); overflow:hidden;
     box-shadow:0 10px 26px var(--ring); animation:bob 5s ease-in-out infinite}
@@ -86,7 +74,6 @@
   .critter img,.critter svg{width:100%;height:100%;object-fit:cover;display:block}
   @keyframes bob{0%,100%{transform:translateY(0) rotate(-1.5deg)}50%{transform:translateY(-8px) rotate(1.5deg)}}
 
-  /* balloons */
   .balloons{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:28px; width:100%; max-width:560px}
   .balloon{background:none; border:none; box-shadow:none; padding:0; backdrop-filter:none; cursor:pointer;
     display:flex; flex-direction:column; align-items:center; animation:float 5.5s ease-in-out infinite}
@@ -104,107 +91,26 @@
   .reveal{margin-top:26px; opacity:0; pointer-events:none; transition:opacity .6s ease}
   .reveal.on{opacity:1; pointer-events:auto}
 
-  /* cake — blow into the mic, or swipe across the flames */
-const cakeBtn = document.getElementById('cakeBtn'),
-      breath = document.getElementById('breath'),
-      breathBar = document.getElementById('breathBar'),
-      breathLabel = document.getElementById('breathLabel'),
-      micBtn = document.getElementById('micBtn'),
-      tapBtn = document.getElementById('tapBtn'),
-      cakeControls = document.getElementById('cakeControls'),
-      cakeHint = document.getElementById('cakeHint');
-let audioCtx = null, stream = null, raf = null, blowStart = 0, blownOut = false;
+  /* ── cake ── */
+  .cakeWrap{width:min(86vw,330px); margin-top:22px}
+  .cakeWrap svg{width:100%; height:auto; display:block; filter:drop-shadow(0 16px 28px rgba(140,86,124,.2))}
+  .candle{cursor:pointer}
+  .candle .hit{fill:transparent}
+  .flame{transform-box:fill-box; transform-origin:bottom center;
+    animation:flicker .9s ease-in-out infinite alternate}
+  @keyframes flicker{from{transform:scaleY(1) scaleX(1); opacity:1}to{transform:scaleY(1.18) scaleX(.9); opacity:.86}}
+  .candle:hover .flame{animation-duration:.32s}
+  .candle.out .flame{animation:blowout .5s ease-out forwards}
+  @keyframes blowout{
+    0%{transform:scaleY(1) rotate(0deg); opacity:1}
+    35%{transform:translateX(5px) rotate(28deg) scaleY(.6); opacity:.9}
+    100%{transform:translateX(15px) rotate(60deg) scale(.08); opacity:0}}
+  .smoke{opacity:0; transform-box:fill-box; transform-origin:bottom center}
+  .candle.out .smoke{animation:smoke 2.1s ease-out .2s forwards}
+  @keyframes smoke{0%{opacity:.5; transform:translateY(0) scale(.5)}
+                   100%{opacity:0; transform:translateY(-42px) scale(1.8)}}
+  .counter{margin-top:18px; font-family:"Caveat",cursive; font-size:1.5rem; color:var(--rose); min-height:1.6em}
 
-function setWind(v){ cakeBtn.style.setProperty('--wind', v.toFixed(1)); }
-
-function stopMic(){
-  if(raf){ cancelAnimationFrame(raf); raf = null; }
-  if(stream){ stream.getTracks().forEach(t=>t.stop()); stream = null; }
-  if(audioCtx){ audioCtx.close().catch(()=>{}); audioCtx = null; }
-}
-
-function extinguish(){
-  if(blownOut) return;
-  blownOut = true;
-  stopMic();
-  setWind(0);
-  cakeBtn.classList.add('out');
-  breath.hidden = true; breathLabel.hidden = true; cakeControls.hidden = true; cakeHint.textContent = '';
-  document.getElementById('cakeTitle').innerHTML = 'Wish <em>saved</em>. Don\'t tell anyone.';
-  document.getElementById('cakeSub').textContent = 'That one stays between you and the candles.';
-  const r = cakeBtn.getBoundingClientRect();
-  confetti(r.left + r.width/2, r.top + 30, 34);
-  setTimeout(()=> document.getElementById('cakeDone').classList.add('on'), 900);
-}
-
-async function listenForBlow(){
-  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
-    cakeHint.textContent = "This browser won't share the mic \u2014 swipe across the candles instead.";
-    tapBtn.hidden = false; return;
-  }
-  try{
-    stream = await navigator.mediaDevices.getUserMedia({
-      audio:{ echoCancellation:false, noiseSuppression:false, autoGainControl:false }
-    });
-  }catch(err){
-    cakeHint.textContent = "No mic, no problem \u2014 swipe fast across the candles, or tap.";
-    tapBtn.hidden = false; return;
-  }
-  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  const analyser = audioCtx.createAnalyser();
-  analyser.fftSize = 1024; analyser.smoothingTimeConstant = .25;
-  audioCtx.createMediaStreamSource(stream).connect(analyser);
-
-  micBtn.hidden = true; breath.hidden = false; breathLabel.hidden = false;
-  cakeHint.textContent = 'Close your eyes. Make the wish. Then blow.';
-
-  const timeData = new Uint8Array(analyser.fftSize);
-  const freqData = new Uint8Array(analyser.frequencyBinCount);
-  const binHz = (audioCtx.sampleRate/2) / analyser.frequencyBinCount;
-  const lowBins = Math.max(4, Math.round(500 / binHz));
-
-  (function loop(){
-    analyser.getByteTimeDomainData(timeData);
-    analyser.getByteFrequencyData(freqData);
-    let sum = 0;
-    for(let i=0;i<timeData.length;i++){ const v = (timeData[i]-128)/128; sum += v*v; }
-    const rms = Math.sqrt(sum/timeData.length);
-    let low = 0, all = 0;
-    for(let i=0;i<freqData.length;i++){ all += freqData[i]; if(i < lowBins) low += freqData[i]; }
-    const lowRatio = all ? low/all : 0;
-    const strength = Math.min(1, rms/0.17);
-    breathBar.style.width = (strength*100) + '%';
-    setWind(strength * 28);
-    if(rms > 0.085 && lowRatio > 0.42){
-      if(!blowStart) blowStart = performance.now();
-      else if(performance.now() - blowStart > 240){ extinguish(); return; }
-    } else blowStart = 0;
-    raf = requestAnimationFrame(loop);
-  })();
-}
-micBtn.addEventListener('click', listenForBlow);
-tapBtn.addEventListener('click', extinguish);
-setTimeout(()=>{ if(!blownOut) tapBtn.hidden = false; }, 18000);
-
-/* swipe across the candles = a gust of wind */
-let lastX = null, lastT = 0;
-function gust(x){
-  const now = performance.now();
-  if(lastX !== null){
-    const speed = Math.abs(x - lastX) / Math.max(1, now - lastT);
-    setWind(Math.min(28, speed * 26));
-    if(speed > 0.85) extinguish();
-  }
-  lastX = x; lastT = now;
-}
-function calm(){ lastX = null; if(!blownOut) setWind(0); }
-cakeBtn.addEventListener('touchmove', e=> gust(e.touches[0].clientX), {passive:true});
-cakeBtn.addEventListener('touchend', calm, {passive:true});
-cakeBtn.addEventListener('mousemove', e=> gust(e.clientX));
-cakeBtn.addEventListener('mouseleave', calm);
-cakeBtn.addEventListener('click', e=> e.preventDefault());
-
-/* gallery */
   .gallery{width:100%; max-width:392px; margin-top:24px; position:relative}
   .card{background:var(--card); border:1px solid var(--line); border-radius:20px; box-shadow:var(--shadow);
     padding:15px 15px 54px; position:relative; transform:rotate(-1deg)}
@@ -226,16 +132,14 @@ cakeBtn.addEventListener('click', e=> e.preventDefault());
   .nav{display:flex; gap:12px; justify-content:center; margin-top:16px}
   .nav button{padding:12px 22px; font-size:.94rem}
 
-  /* letter */
   .envelope{width:min(84vw,330px); margin-top:24px; cursor:pointer; background:none; border:none;
     box-shadow:none; padding:0; backdrop-filter:none}
   .envelope:hover{transform:translateY(-4px); box-shadow:none}
   .envelope svg{width:100%; height:auto; display:block; filter:drop-shadow(0 16px 28px rgba(140,86,124,.2))}
   .paper{background:var(--card); border:1px solid var(--line); border-radius:20px; box-shadow:var(--shadow);
     padding:28px 24px; margin-top:22px; width:100%; text-align:left}
-  .letter{font-family:"Caveat",cursive; font-size:1.5rem; line-height:1.8; white-space:pre-line;
-    color:var(--ink); background-image:repeating-linear-gradient(transparent,transparent 42px,rgba(169,140,217,.22) 43px);
-    padding:6px 2px}
+  .letter{font-family:"Caveat",cursive; font-size:1.5rem; line-height:1.8; white-space:pre-line; color:var(--ink);
+    background-image:repeating-linear-gradient(transparent,transparent 42px,rgba(169,140,217,.22) 43px); padding:6px 2px}
 
   .bit{position:fixed; width:9px; height:9px; border-radius:50%; z-index:70; pointer-events:none}
 
@@ -249,7 +153,6 @@ cakeBtn.addEventListener('click', e=> e.preventDefault());
 <body>
 <main class="stage">
 
-  <!-- 1. ASK -->
   <section class="screen is-active" id="ask">
     <span class="eyebrow">Knock knock</span>
     <h1>I made <em>something</em> for you.</h1>
@@ -262,7 +165,6 @@ cakeBtn.addEventListener('click', e=> e.preventDefault());
     <div class="critter" data-animal="cat"></div>
   </section>
 
-  <!-- 2. BALLOONS -->
   <section class="screen" id="balloons">
     <span class="eyebrow">Pop all four</span>
     <h1>Something's <em>hiding</em> in these.</h1>
@@ -273,17 +175,28 @@ cakeBtn.addEventListener('click', e=> e.preventDefault());
     </div>
   </section>
 
-  <!-- 3. CAKE -->
   <section class="screen" id="cake">
     <span class="eyebrow">One job</span>
     <h1 id="cakeTitle">Close your eyes and <em>make a wish</em>.</h1>
-    <p class="sub" id="cakeSub">Then actually blow at your phone — the candles are listening.</p>
-    <button class="cake" id="cakeBtn" aria-label="Blow out the candles">
+    <p class="sub" id="cakeSub">Then tap the candles out, one by one.</p>
+    <div class="cakeWrap" id="cakeWrap">
       <svg viewBox="0 0 300 250" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <g><ellipse class="smoke" cx="90" cy="70" rx="6" ry="8" fill="#7A6076"/><g class="flameWrap"><path class="flame" d="M90 60c7 6 10 11 10 16a10 10 0 11-20 0c0-5 3-10 10-16z" fill="#F0BE5C"/></g><rect x="84" y="88" width="12" height="34" rx="5" fill="#fff" stroke="rgba(74,51,72,.18)" stroke-width="1.5"/></g>
-        <g><ellipse class="smoke" cx="130" cy="62" rx="6" ry="8" fill="#7A6076"/><g class="flameWrap"><path class="flame" d="M130 52c7 6 10 11 10 16a10 10 0 11-20 0c0-5 3-10 10-16z" fill="#F0BE5C"/></g><rect x="124" y="80" width="12" height="42" rx="5" fill="#F7D9E2" stroke="rgba(74,51,72,.18)" stroke-width="1.5"/></g>
-        <g><ellipse class="smoke" cx="170" cy="62" rx="6" ry="8" fill="#7A6076"/><g class="flameWrap"><path class="flame" d="M170 52c7 6 10 11 10 16a10 10 0 11-20 0c0-5 3-10 10-16z" fill="#F0BE5C"/></g><rect x="164" y="80" width="12" height="42" rx="5" fill="#E4DAF7" stroke="rgba(74,51,72,.18)" stroke-width="1.5"/></g>
-        <g><ellipse class="smoke" cx="210" cy="70" rx="6" ry="8" fill="#7A6076"/><g class="flameWrap"><path class="flame" d="M210 60c7 6 10 11 10 16a10 10 0 11-20 0c0-5 3-10 10-16z" fill="#F0BE5C"/></g><rect x="204" y="88" width="12" height="34" rx="5" fill="#fff" stroke="rgba(74,51,72,.18)" stroke-width="1.5"/></g>
+        <g class="candle"><rect class="hit" x="70" y="44" width="40" height="80"/>
+          <ellipse class="smoke" cx="90" cy="70" rx="6" ry="8" fill="#7A6076"/>
+          <path class="flame" d="M90 60c7 6 10 11 10 16a10 10 0 11-20 0c0-5 3-10 10-16z" fill="#F0BE5C"/>
+          <rect x="84" y="88" width="12" height="34" rx="5" fill="#fff" stroke="rgba(74,51,72,.18)" stroke-width="1.5"/></g>
+        <g class="candle"><rect class="hit" x="110" y="36" width="40" height="88"/>
+          <ellipse class="smoke" cx="130" cy="62" rx="6" ry="8" fill="#7A6076"/>
+          <path class="flame" d="M130 52c7 6 10 11 10 16a10 10 0 11-20 0c0-5 3-10 10-16z" fill="#F0BE5C"/>
+          <rect x="124" y="80" width="12" height="42" rx="5" fill="#F7D9E2" stroke="rgba(74,51,72,.18)" stroke-width="1.5"/></g>
+        <g class="candle"><rect class="hit" x="150" y="36" width="40" height="88"/>
+          <ellipse class="smoke" cx="170" cy="62" rx="6" ry="8" fill="#7A6076"/>
+          <path class="flame" d="M170 52c7 6 10 11 10 16a10 10 0 11-20 0c0-5 3-10 10-16z" fill="#F0BE5C"/>
+          <rect x="164" y="80" width="12" height="42" rx="5" fill="#E4DAF7" stroke="rgba(74,51,72,.18)" stroke-width="1.5"/></g>
+        <g class="candle"><rect class="hit" x="190" y="44" width="40" height="80"/>
+          <ellipse class="smoke" cx="210" cy="70" rx="6" ry="8" fill="#7A6076"/>
+          <path class="flame" d="M210 60c7 6 10 11 10 16a10 10 0 11-20 0c0-5 3-10 10-16z" fill="#F0BE5C"/>
+          <rect x="204" y="88" width="12" height="34" rx="5" fill="#fff" stroke="rgba(74,51,72,.18)" stroke-width="1.5"/></g>
         <rect x="52" y="120" width="196" height="48" rx="16" fill="#F5A9BC"/>
         <path d="M54 134c12 11 25 11 37 0s25-11 37 0 25 11 37 0 25-11 37 0v-14H54z" fill="#FFF1F5"/>
         <rect x="34" y="164" width="232" height="58" rx="18" fill="#C9B4EC"/>
@@ -292,20 +205,13 @@ cakeBtn.addEventListener('click', e=> e.preventDefault());
         <circle cx="168" cy="198" r="6" fill="#E8738D"/><circle cx="214" cy="198" r="6" fill="#fff"/>
         <rect x="24" y="220" width="252" height="16" rx="8" fill="#fff"/>
       </svg>
-    </button>
-    <div class="breath" id="breath" hidden><div class="breathBar" id="breathBar"></div></div>
-    <p class="breathLabel" id="breathLabel" hidden>breath</p>
-    <div class="row" id="cakeControls">
-      <button class="primary" id="micBtn">Let me blow it out</button>
-      <button class="ghost" id="tapBtn" hidden>Just tap instead</button>
     </div>
-    <p class="hint" id="cakeHint">Or swipe fast across the candles.</p>
+    <p class="counter" id="counter">four candles, four taps</p>
     <div class="reveal" id="cakeDone">
       <button class="primary" data-go="gallery">Now open your eyes</button>
     </div>
   </section>
 
-  <!-- 4. GALLERY -->
   <section class="screen" id="gallery">
     <span class="eyebrow">Swipe through</span>
     <h1>Proof you were <em>here</em>.</h1>
@@ -326,7 +232,6 @@ cakeBtn.addEventListener('click', e=> e.preventDefault());
     </div>
   </section>
 
-  <!-- 5. LETTER -->
   <section class="screen" id="letter">
     <span class="eyebrow">Last thing</span>
     <h1 id="letterTitle">Tap to <em>open</em> it.</h1>
@@ -340,10 +245,8 @@ cakeBtn.addEventListener('click', e=> e.preventDefault());
         <path d="M150 106c5 5 8 8 8 12a8 8 0 01-16 0c0-4 3-7 8-12z" fill="#fff" opacity=".9"/>
       </svg>
     </button>
-    <div class="paper" id="paper" style="display:none">
-      <div class="letter" id="letterText"></div>
-    </div>
-    <div class="critter" data-animal="dog" id="endPet" style="display:none"></div>
+    <div class="paper" id="paper" hidden><div class="letter" id="letterText"></div></div>
+    <div class="critter" data-animal="dog" id="endPet" hidden></div>
   </section>
 
 </main>
@@ -374,6 +277,8 @@ Here's to another year of you. I hope it's kind to you.
 const TAUNTS = ["nope.", "not that one.", "the audacity!", "it's not going to happen.",
                 "you're really committed to this, huh", "okay now you're just playing", "press YES. please."];
 
+const COUNTDOWN = ["four candles, four taps", "three to go", "two left", "last one", ""];
+
 /* ══════════════════════════════════════════════════ */
 
 const PET_PHOTOS = {
@@ -381,45 +286,43 @@ const PET_PHOTOS = {
   dog: "https://placedog.net/600/600?id=76"
 };
 const DRAWINGS = {
-  cat:`<svg viewBox="0 0 100 100" fill="none"><rect width="100" height="100" fill="#F7DCE6"/><path d="M22 40 18 16l20 12M78 40 82 16 62 28" fill="#F5A9BC" stroke="#4A3348" stroke-width="3" stroke-linejoin="round"/><ellipse cx="50" cy="58" rx="34" ry="30" fill="#F5A9BC" stroke="#4A3348" stroke-width="3"/><path d="M36 54c3 4 7 4 10 0M54 54c3 4 7 4 10 0" stroke="#4A3348" stroke-width="3" stroke-linecap="round"/><path d="M46 66h8l-4 5z" fill="#4A3348"/></svg>`,
-  dog:`<svg viewBox="0 0 100 100" fill="none"><rect width="100" height="100" fill="#EFE6FC"/><ellipse cx="20" cy="52" rx="11" ry="22" fill="#C9B4EC" stroke="#4A3348" stroke-width="3"/><ellipse cx="80" cy="52" rx="11" ry="22" fill="#C9B4EC" stroke="#4A3348" stroke-width="3"/><ellipse cx="50" cy="54" rx="32" ry="29" fill="#C9B4EC" stroke="#4A3348" stroke-width="3"/><circle cx="40" cy="48" r="4" fill="#4A3348"/><circle cx="60" cy="48" r="4" fill="#4A3348"/><ellipse cx="50" cy="66" rx="15" ry="11" fill="#fff" stroke="#4A3348" stroke-width="3"/><ellipse cx="50" cy="61" rx="5" ry="4" fill="#4A3348"/></svg>`
+  cat:'<svg viewBox="0 0 100 100" fill="none"><rect width="100" height="100" fill="#F7DCE6"/><path d="M22 40 18 16l20 12M78 40 82 16 62 28" fill="#F5A9BC" stroke="#4A3348" stroke-width="3" stroke-linejoin="round"/><ellipse cx="50" cy="58" rx="34" ry="30" fill="#F5A9BC" stroke="#4A3348" stroke-width="3"/><path d="M36 54c3 4 7 4 10 0M54 54c3 4 7 4 10 0" stroke="#4A3348" stroke-width="3" stroke-linecap="round"/><path d="M46 66h8l-4 5z" fill="#4A3348"/></svg>',
+  dog:'<svg viewBox="0 0 100 100" fill="none"><rect width="100" height="100" fill="#EFE6FC"/><ellipse cx="20" cy="52" rx="11" ry="22" fill="#C9B4EC" stroke="#4A3348" stroke-width="3"/><ellipse cx="80" cy="52" rx="11" ry="22" fill="#C9B4EC" stroke="#4A3348" stroke-width="3"/><ellipse cx="50" cy="54" rx="32" ry="29" fill="#C9B4EC" stroke="#4A3348" stroke-width="3"/><circle cx="40" cy="48" r="4" fill="#4A3348"/><circle cx="60" cy="48" r="4" fill="#4A3348"/><ellipse cx="50" cy="66" rx="15" ry="11" fill="#fff" stroke="#4A3348" stroke-width="3"/><ellipse cx="50" cy="61" rx="5" ry="4" fill="#4A3348"/></svg>'
 };
-document.querySelectorAll('.critter').forEach(el=>{
-  const kind = el.dataset.animal;
+document.querySelectorAll('.critter').forEach(function(el){
+  var kind = el.dataset.animal;
   el.innerHTML = DRAWINGS[kind];
-  const img = new Image();
+  var img = new Image();
   img.alt = kind === 'dog' ? "a very good dog" : "a cute cat";
-  img.onload = ()=>{ el.innerHTML=''; el.appendChild(img); };
+  img.onload = function(){ el.innerHTML=''; el.appendChild(img); };
   img.src = PET_PHOTOS[kind] + "&t=" + Date.now();
 });
 
 function show(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('is-active'));
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('is-active'); });
   document.getElementById(id).classList.add('is-active');
   if(id !== 'ask') resetNo();
-  if(id !== 'cake' && typeof stopMic === 'function') stopMic();
   window.scrollTo({top:0, behavior:'smooth'});
 }
-document.addEventListener('click', e=>{
-  const t = e.target.closest('[data-go]');
+document.addEventListener('click', function(e){
+  var t = e.target.closest('[data-go]');
   if(t) show(t.dataset.go);
 });
 
 /* runaway No */
-const noBtn = document.getElementById('noBtn'), hint = document.getElementById('hint');
-let dodges = 0;
+var noBtn = document.getElementById('noBtn'), hint = document.getElementById('hint'), dodges = 0;
 function resetNo(){ noBtn.classList.remove('loose'); noBtn.style.cssText=''; }
 function dodge(e){
   if(e) e.preventDefault();
-  const r = noBtn.getBoundingClientRect();
+  var r = noBtn.getBoundingClientRect();
   if(!noBtn.classList.contains('loose')){
     noBtn.style.width = r.width+'px'; noBtn.style.height = r.height+'px';
     noBtn.style.left = r.left+'px'; noBtn.style.top = r.top+'px';
     noBtn.classList.add('loose');
   }
-  const pad = 10, W = window.innerWidth, H = window.innerHeight;
-  const yes = document.querySelector('#ask .primary').getBoundingClientRect();
-  let x, y, tries = 0;
+  var pad = 10, W = window.innerWidth, H = window.innerHeight;
+  var yes = document.querySelector('#ask .primary').getBoundingClientRect();
+  var x, y, tries = 0;
   do{
     x = pad + Math.random()*(W - r.width - pad*2);
     y = pad + Math.random()*(H - r.height - pad*2);
@@ -430,36 +333,36 @@ function dodge(e){
   hint.textContent = TAUNTS[Math.min(dodges, TAUNTS.length-1)];
   dodges++;
 }
-['pointerenter','pointerdown','mouseover','touchstart','focus'].forEach(ev=>
-  noBtn.addEventListener(ev, dodge, {passive:false}));
-noBtn.addEventListener('click', e=>{ e.preventDefault(); dodge(e); });
+['pointerenter','pointerdown','mouseover','touchstart','focus'].forEach(function(ev){
+  noBtn.addEventListener(ev, dodge, {passive:false});
+});
+noBtn.addEventListener('click', function(e){ e.preventDefault(); dodge(e); });
 
-/* confetti — soft petals */
-const COLORS = ['#F5A9BC','#C9B4EC','#8FCFB6','#F0BE5C','#FFFFFF'];
+/* confetti */
+var COLORS = ['#F5A9BC','#C9B4EC','#8FCFB6','#F0BE5C','#FFFFFF'];
 function confetti(x, y, n){
-  for(let i=0;i<n;i++){
-    const b = document.createElement('div');
+  for(var i=0;i<n;i++){
+    var b = document.createElement('div');
     b.className = 'bit';
     b.style.background = COLORS[i % COLORS.length];
     b.style.left = x+'px'; b.style.top = y+'px';
     b.style.width = b.style.height = (6 + Math.random()*7)+'px';
     b.style.borderRadius = Math.random() > .5 ? '50%' : '50% 0 50% 50%';
     document.body.appendChild(b);
-    const ang = Math.random()*Math.PI*2, dist = 50 + Math.random()*180;
-    b.animate([
+    var ang = Math.random()*Math.PI*2, dist = 50 + Math.random()*180;
+    var anim = b.animate([
       {transform:'translate(0,0) rotate(0deg)', opacity:1},
       {transform:'translate('+Math.cos(ang)*dist+'px,'+(Math.sin(ang)*dist+250)+'px) rotate('+(Math.random()*540-270)+'deg)', opacity:0}
-    ], {duration: 1300 + Math.random()*800, easing:'cubic-bezier(.15,.6,.35,1)'})
-     .onfinish = ()=> b.remove();
+    ], {duration: 1300 + Math.random()*800, easing:'cubic-bezier(.15,.6,.35,1)'});
+    anim.onfinish = (function(el){ return function(){ el.remove(); }; })(b);
   }
 }
 
 /* balloons */
-const BAL = [['#F5A9BC','#E8738D'],['#C9B4EC','#A98CD9'],['#A8DCC8','#8FCFB6'],['#F7D08A','#F0BE5C']];
-const row = document.getElementById('balloonRow');
-let popped = 0;
-WORDS.slice(0,4).forEach((w,i)=>{
-  const b = document.createElement('button');
+var BAL = [['#F5A9BC','#E8738D'],['#C9B4EC','#A98CD9'],['#A8DCC8','#8FCFB6'],['#F7D08A','#F0BE5C']];
+var row = document.getElementById('balloonRow'), popped = 0;
+WORDS.slice(0,4).forEach(function(w,i){
+  var b = document.createElement('button');
   b.className = 'balloon'; b.setAttribute('aria-label','Pop balloon '+(i+1));
   b.innerHTML = '<svg viewBox="0 0 100 150" fill="none">'
     + '<defs><linearGradient id="g'+i+'" x1="0" y1="0" x2="1" y2="1">'
@@ -470,14 +373,14 @@ WORDS.slice(0,4).forEach((w,i)=>{
     + '<path d="M44 96h12l-6 9z" fill="'+BAL[i][1]+'"/>'
     + '<path d="M50 105c10 12-10 20 0 34" stroke="'+BAL[i][1]+'" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".8"/>'
     + '</svg><span class="word">'+w+'</span>';
-  b.addEventListener('click', ()=>{
+  b.addEventListener('click', function(){
     if(b.classList.contains('popped')) return;
     b.classList.add('popped');
-    const r = b.getBoundingClientRect();
+    var r = b.getBoundingClientRect();
     confetti(r.left + r.width/2, r.top + r.height/3, 16);
     popped++;
     if(popped === Math.min(WORDS.length,4)){
-      setTimeout(()=>{
+      setTimeout(function(){
         document.getElementById('balloonDone').classList.add('on');
         confetti(window.innerWidth/2, window.innerHeight/3, 40);
       }, 550);
@@ -486,58 +389,66 @@ WORDS.slice(0,4).forEach((w,i)=>{
   row.appendChild(b);
 });
 
-/* cake */
-const cakeBtn = document.getElementById('cakeBtn');
-cakeBtn.addEventListener('click', ()=>{
-  if(cakeBtn.classList.contains('out')) return;
-  cakeBtn.classList.add('out');
-  document.getElementById('cakeTitle').innerHTML = 'Wish <em>saved</em>. Don\'t tell anyone.';
-  document.getElementById('cakeSub').textContent = 'That one stays between you and the candles.';
-  const r = cakeBtn.getBoundingClientRect();
-  confetti(r.left + r.width/2, r.top + 30, 34);
-  setTimeout(()=> document.getElementById('cakeDone').classList.add('on'), 900);
+/* cake — tap each candle out */
+var cakeWrap = document.getElementById('cakeWrap'), counter = document.getElementById('counter'), outCount = 0;
+cakeWrap.addEventListener('click', function(e){
+  var c = e.target.closest('.candle');
+  if(!c || c.classList.contains('out')) return;
+  c.classList.add('out');
+  outCount++;
+  var r = c.getBoundingClientRect();
+  confetti(r.left + r.width/2, r.top + r.height/4, 8);
+  counter.textContent = COUNTDOWN[Math.min(outCount, COUNTDOWN.length-1)];
+  if(outCount === 4){
+    setTimeout(function(){
+      document.getElementById('cakeTitle').innerHTML = "Wish <em>saved</em>. Don't tell anyone.";
+      document.getElementById('cakeSub').textContent = 'That one stays between you and the candles.';
+      var b = cakeWrap.getBoundingClientRect();
+      confetti(b.left + b.width/2, b.top + 30, 34);
+      document.getElementById('cakeDone').classList.add('on');
+    }, 800);
+  }
 });
 
 /* gallery */
-const card = document.getElementById('card'), cap = document.getElementById('cardCap'),
-      dots = document.getElementById('dots');
-let idx = 0;
-PHOTOS.forEach(()=>{ const d = document.createElement('span'); d.className='dot'; dots.appendChild(d); });
+var card = document.getElementById('card'), cap = document.getElementById('cardCap'),
+    dots = document.getElementById('dots'), idx = 0;
+PHOTOS.forEach(function(){ var d = document.createElement('span'); d.className='dot'; dots.appendChild(d); });
 function renderCard(){
-  const p = PHOTOS[idx];
-  const inner = p.url
+  var p = PHOTOS[idx];
+  var inner = p.url
     ? '<img src="'+p.url+'" alt="'+(p.caption||'a photo of you')+'">'
     : '<div class="ph">Photo '+(idx+1)+' goes here — paste a link into <b>PHOTOS</b> near the bottom of the file.</div>';
   card.querySelector('img, .ph').outerHTML = inner;
   cap.textContent = p.caption || '';
   card.classList.remove('swap'); void card.offsetWidth; card.classList.add('swap');
-  [...dots.children].forEach((d,i)=> d.classList.toggle('on', i === idx));
+  [].forEach.call(dots.children, function(d,i){ d.classList.toggle('on', i === idx); });
   document.getElementById('prevBtn').style.visibility = idx === 0 ? 'hidden' : 'visible';
-  document.getElementById('nextBtn').textContent = idx === PHOTOS.length-1 ? 'That\'s all of them' : 'Next';
+  document.getElementById('nextBtn').textContent = idx === PHOTOS.length-1 ? "That's all of them" : 'Next';
   if(idx === PHOTOS.length-1) document.getElementById('galleryDone').classList.add('on');
 }
-document.getElementById('nextBtn').addEventListener('click', ()=>{
+document.getElementById('nextBtn').addEventListener('click', function(){
   if(idx < PHOTOS.length-1){ idx++; renderCard(); } else show('letter');
 });
-document.getElementById('prevBtn').addEventListener('click', ()=>{ if(idx>0){ idx--; renderCard(); } });
-let sx = null;
-card.addEventListener('touchstart', e=>{ sx = e.changedTouches[0].clientX; }, {passive:true});
-card.addEventListener('touchend', e=>{
+document.getElementById('prevBtn').addEventListener('click', function(){ if(idx>0){ idx--; renderCard(); } });
+var sx = null;
+card.addEventListener('touchstart', function(e){ sx = e.changedTouches[0].clientX; }, {passive:true});
+card.addEventListener('touchend', function(e){
   if(sx === null) return;
-  const dx = e.changedTouches[0].clientX - sx; sx = null;
+  var dx = e.changedTouches[0].clientX - sx; sx = null;
   if(dx < -45 && idx < PHOTOS.length-1){ idx++; renderCard(); }
   if(dx > 45 && idx > 0){ idx--; renderCard(); }
 }, {passive:true});
 renderCard();
 
 /* letter */
-const envBtn = document.getElementById('envBtn');
+var envBtn = document.getElementById('envBtn');
 document.getElementById('letterText').textContent = LETTER;
-envBtn.addEventListener('click', ()=>{
-  envBtn.style.display = 'none';
+envBtn.addEventListener('click', function(){
+  envBtn.hidden = true;
   document.getElementById('letterTitle').innerHTML = 'Read it <em>slowly</em>.';
-  document.getElementById('paper').style.display = 'block';
-  document.getElementById('endPet').style.display = 'block';
+  document.getElementById('paper').hidden = false;
+  document.getElementById('endPet').hidden = false;
   confetti(window.innerWidth/2, window.innerHeight/3, 26);
 });
 </script>
