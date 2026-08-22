@@ -94,6 +94,7 @@
   /* ── cake ── */
   .cakeWrap{width:min(86vw,330px); margin-top:22px}
   .cakeWrap svg{width:100%; height:auto; display:block; filter:drop-shadow(0 16px 28px rgba(140,86,124,.2))}
+  .cakeWrap{cursor:pointer}
   .candle{cursor:pointer}
   .candle .hit{fill:transparent}
   .flame{transform-box:fill-box; transform-origin:bottom center;
@@ -178,7 +179,7 @@
   <section class="screen" id="cake">
     <span class="eyebrow">One job</span>
     <h1 id="cakeTitle">Close your eyes and <em>make a wish</em>.</h1>
-    <p class="sub" id="cakeSub">Then tap the candles out, one by one.</p>
+    <p class="sub" id="cakeSub">Then tap the cake four times — one candle goes out each tap.</p>
     <div class="cakeWrap" id="cakeWrap">
       <svg viewBox="0 0 300 250" fill="none" xmlns="http://www.w3.org/2000/svg">
         <g class="candle"><rect class="hit" x="70" y="44" width="40" height="80"/>
@@ -393,7 +394,10 @@ WORDS.slice(0,4).forEach(function(w,i){
 var cakeWrap = document.getElementById('cakeWrap'), counter = document.getElementById('counter'), outCount = 0;
 cakeWrap.addEventListener('click', function(e){
   var c = e.target.closest('.candle');
-  if(!c || c.classList.contains('out')) return;
+  // tapped a specific candle? put that one out. tapped anywhere else on the
+  // cake? put out the next one still burning.
+  if(!c || c.classList.contains('out')) c = cakeWrap.querySelector('.candle:not(.out)');
+  if(!c) return;
   c.classList.add('out');
   outCount++;
   var r = c.getBoundingClientRect();
