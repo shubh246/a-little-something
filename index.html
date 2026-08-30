@@ -114,16 +114,16 @@
   .flame{transform-box:fill-box; transform-origin:bottom center;
     animation:flicker .9s ease-in-out infinite alternate}
   @keyframes flicker{from{transform:scaleY(1) scaleX(1); opacity:1}to{transform:scaleY(1.18) scaleX(.9); opacity:.86}}
-  .candle:hover .flame{animation-duration:.32s}
-  .candle.out .flame{animation:blowout .5s ease-out forwards}
-  @keyframes blowout{
-    0%{transform:scaleY(1) rotate(0deg); opacity:1}
-    35%{transform:translateX(5px) rotate(28deg) scaleY(.6); opacity:.9}
-    100%{transform:translateX(15px) rotate(60deg) scale(.08); opacity:0}}
+  .candle.unlit .flame{opacity:0; transform:scale(.25); animation:none}
+  .candle.lit .flame{animation:ignite .35s ease-out both, flicker .9s ease-in-out .35s infinite alternate}
+  @keyframes ignite{
+    0%{transform:scale(.2); opacity:0}
+    55%{transform:scale(1.25); opacity:1}
+    100%{transform:scale(1); opacity:1}}
   .smoke{opacity:0; transform-box:fill-box; transform-origin:bottom center}
-  .candle.out .smoke{animation:smoke 2.1s ease-out .2s forwards}
-  @keyframes smoke{0%{opacity:.5; transform:translateY(0) scale(.5)}
-                   100%{opacity:0; transform:translateY(-42px) scale(1.8)}}
+  .candle.lit .smoke{animation:spark .5s ease-out forwards}
+  @keyframes spark{0%{opacity:.6; transform:translateY(6px) scale(.4)}
+                   100%{opacity:0; transform:translateY(-10px) scale(1.1)}}
   .counter{margin-top:18px; font-family:"Caveat",cursive; font-size:1.5rem; color:var(--rose); min-height:1.6em}
 
   /* bouquet */
@@ -171,7 +171,7 @@
   .videoLabel{font-family:"Caveat",cursive; font-size:1.3rem; color:var(--rose); margin-bottom:10px}
   .videoBox{position:relative; aspect-ratio:16/9; border-radius:16px; overflow:hidden;
     background:#2A1F2C; box-shadow:var(--shadow-sm); border:1px solid var(--line)}
-  .videoBox iframe, .videoBox video{position:absolute; inset:0; width:100%; height:100%; border:0; display:block}
+  .videoBox iframe, .videoBox video{position:absolute; inset:0; width:100%; height:100%; border:0; display:block; object-fit:contain}
   .letter{font-family:"Caveat",cursive; font-size:1.5rem; line-height:1.8; white-space:pre-line; color:var(--ink);
     background-image:repeating-linear-gradient(transparent,transparent 42px,rgba(169,140,217,.22) 43px); padding:6px 2px}
 
@@ -207,29 +207,29 @@
     <div class="balloons" id="balloonRow"></div>
     <div class="reveal" id="balloonDone">
       <p class="sub" style="max-width:30ch">And that's the whole message. There's more.</p>
-      <button class="primary" data-go="cake" style="margin-top:16px">There's a cake?</button>
+      <button class="primary" data-go="cake" style="margin-top:16px">What's next!??</button>
     </div>
   </section>
 
   <section class="screen" id="cake">
     <span class="eyebrow">One job</span>
-    <h1 id="cakeTitle">Close your eyes and <em>make a wish</em>.</h1>
-    <p class="sub" id="cakeSub">Now sweep your finger across the flames, like a real breath.</p>
+    <h1 id="cakeTitle">Light the candles, <em>one by one</em>.</h1>
+    <p class="sub" id="cakeSub">Trail your finger across them to light each one.</p>
     <div class="cakeWrap" id="cakeWrap">
       <svg viewBox="0 0 300 250" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <g class="candle"><rect class="hit" x="70" y="44" width="40" height="80"/>
+        <g class="candle unlit"><rect class="hit" x="70" y="44" width="40" height="80"/>
           <ellipse class="smoke" cx="90" cy="70" rx="6" ry="8" fill="#7A6076"/>
           <g class="flameWrap"><path class="flame" d="M90 60c7 6 10 11 10 16a10 10 0 11-20 0c0-5 3-10 10-16z" fill="#F0BE5C"/></g>
           <rect x="84" y="88" width="12" height="34" rx="5" fill="#fff" stroke="rgba(74,51,72,.18)" stroke-width="1.5"/></g>
-        <g class="candle"><rect class="hit" x="110" y="36" width="40" height="88"/>
+        <g class="candle unlit"><rect class="hit" x="110" y="36" width="40" height="88"/>
           <ellipse class="smoke" cx="130" cy="62" rx="6" ry="8" fill="#7A6076"/>
           <g class="flameWrap"><path class="flame" d="M130 52c7 6 10 11 10 16a10 10 0 11-20 0c0-5 3-10 10-16z" fill="#F0BE5C"/></g>
           <rect x="124" y="80" width="12" height="42" rx="5" fill="#F7D9E2" stroke="rgba(74,51,72,.18)" stroke-width="1.5"/></g>
-        <g class="candle"><rect class="hit" x="150" y="36" width="40" height="88"/>
+        <g class="candle unlit"><rect class="hit" x="150" y="36" width="40" height="88"/>
           <ellipse class="smoke" cx="170" cy="62" rx="6" ry="8" fill="#7A6076"/>
           <g class="flameWrap"><path class="flame" d="M170 52c7 6 10 11 10 16a10 10 0 11-20 0c0-5 3-10 10-16z" fill="#F0BE5C"/></g>
           <rect x="164" y="80" width="12" height="42" rx="5" fill="#E4DAF7" stroke="rgba(74,51,72,.18)" stroke-width="1.5"/></g>
-        <g class="candle"><rect class="hit" x="190" y="44" width="40" height="80"/>
+        <g class="candle unlit"><rect class="hit" x="190" y="44" width="40" height="80"/>
           <ellipse class="smoke" cx="210" cy="70" rx="6" ry="8" fill="#7A6076"/>
           <g class="flameWrap"><path class="flame" d="M210 60c7 6 10 11 10 16a10 10 0 11-20 0c0-5 3-10 10-16z" fill="#F0BE5C"/></g>
           <rect x="204" y="88" width="12" height="34" rx="5" fill="#fff" stroke="rgba(74,51,72,.18)" stroke-width="1.5"/></g>
@@ -330,13 +330,13 @@
    ══════════════════════════════════════════════════ */
 
 // Who this is for. Appears iced on the cake and in the heading above it.
-const HER_NAME = "Riya";
+const HER_NAME = "Palak";
 
-const WORDS = ["You", "are", "so", "special"];
+const WORDS = ["You", "are", "so", "special ❤️"];
 
 const PHOTOS = [
   { url: "", caption: "that day" },
-  { url: "", caption: "you, laughing at nothing" },
+  { url: "", caption: "ur smile 😘" },
   { url: "", caption: "still my favourite" }
 ];
 
@@ -360,7 +360,7 @@ const BOUQUET_IMG = "bouquet.png";
 
 // A video to play with the letter. Works with a YouTube link, a Google Drive
 // share link, or an .mp4 sitting in the same folder. Leave "" for no video.
-const VIDEO = "https://mdn.github.io/shared-assets/videos/flower.mp4";  // placeholder — swap for yours
+const VIDEO = "memories.mp4";
 const VIDEO_LABEL = "and one more thing \u2014 press play";
 
 // Optional: your own photo behind everything (leave "" for the drawn garden).
@@ -449,7 +449,7 @@ var LAYOUT = [
 })();
 
 const PET_PHOTOS = {
-  cat: "https://cataas.com/cat/cute?width=600&height=600",
+  cat: "sticker.webp",
   dog: "https://placedog.net/600/600?id=76"
 };
 const DRAWINGS = {
@@ -462,7 +462,8 @@ document.querySelectorAll('.critter').forEach(function(el){
   var img = new Image();
   img.alt = kind === 'dog' ? "a very good dog" : "a cute cat";
   img.onload = function(){ el.innerHTML=''; el.appendChild(img); };
-  img.src = PET_PHOTOS[kind] + "&t=" + Date.now();
+  var sep = PET_PHOTOS[kind].indexOf('?') === -1 ? '?' : '&';
+  img.src = PET_PHOTOS[kind] + sep + "t=" + Date.now();
 });
 
 function show(id){
@@ -568,31 +569,31 @@ WORDS.slice(0,4).forEach(function(w,i){
   row.appendChild(b);
 });
 
-/* cake — her name, then sweep a finger across the flames */
+/* cake — her name, then light a finger across the candles */
 if(HER_NAME){
   document.getElementById('cakeName').textContent = HER_NAME;
   document.getElementById('cakeTitle').innerHTML =
-    'Close your eyes, ' + HER_NAME + ', and <em>make a wish</em>.';
+    'Light the candles for ' + HER_NAME + ', <em>one by one</em>.';
 }
 
 var cakeWrap = document.getElementById('cakeWrap'),
     counter = document.getElementById('counter'),
     candles = [].slice.call(cakeWrap.querySelectorAll('.candle')),
-    outCount = 0;
+    litCount = 0;
 
-function blowOut(c){
-  if(!c || c.classList.contains('out')) return;
-  c.classList.add('out');
-  c.style.setProperty('--lean','0deg');
-  c.style.setProperty('--squash','1');
-  outCount++;
+function lightUp(c){
+  if(!c || !c.classList.contains('unlit')) return;
+  c.classList.remove('unlit');
+  c.classList.add('lit');
+  litCount++;
   var r = c.getBoundingClientRect();
   confetti(r.left + r.width/2, r.top + r.height/4, 8);
-  counter.textContent = COUNTDOWN[Math.min(outCount, COUNTDOWN.length-1)];
-  if(outCount === candles.length){
+  counter.textContent = COUNTDOWN[Math.min(litCount, COUNTDOWN.length-1)];
+  if(litCount === candles.length){
     setTimeout(function(){
-      document.getElementById('cakeTitle').innerHTML = "Wish <em>saved</em>. Don't tell anyone.";
-      document.getElementById('cakeSub').textContent = 'That one stays between you and the candles.';
+      document.getElementById('cakeTitle').innerHTML =
+        'Now close your eyes' + (HER_NAME ? ', ' + HER_NAME : '') + ', and <em>make a wish</em>.';
+      document.getElementById('cakeSub').textContent = 'Then open them whenever you\'re ready.';
       var b = cakeWrap.getBoundingClientRect();
       confetti(b.left + b.width/2, b.top + 30, 34);
       document.getElementById('cakeDone').classList.add('on');
@@ -600,40 +601,26 @@ function blowOut(c){
   }
 }
 
-/* flames lean away from the finger, then go out as it passes over them */
+/* trail a finger over an unlit candle to light it */
 function breeze(x, y){
   candles.forEach(function(c){
-    if(c.classList.contains('out')) return;
+    if(!c.classList.contains('unlit')) return;
     var r = c.getBoundingClientRect();
     var cx = r.left + r.width/2, dx = x - cx;
     var nearY = y > r.top - 70 && y < r.bottom + 40;
-    if(!nearY || Math.abs(dx) > 130){
-      c.style.setProperty('--lean','0deg'); c.style.setProperty('--squash','1');
-      return;
-    }
-    var pull = 1 - Math.abs(dx)/130;
-    c.style.setProperty('--lean', (-(dx > 0 ? 1 : -1) * pull * 42).toFixed(1) + 'deg');
-    c.style.setProperty('--squash', (1 - pull*0.3).toFixed(2));
-    if(Math.abs(dx) < r.width * 0.45) blowOut(c);
-  });
-}
-function calm(){
-  candles.forEach(function(c){
-    c.style.setProperty('--lean','0deg'); c.style.setProperty('--squash','1');
+    if(nearY && Math.abs(dx) < r.width * 0.45) lightUp(c);
   });
 }
 cakeWrap.addEventListener('pointermove', function(e){ breeze(e.clientX, e.clientY); });
 cakeWrap.addEventListener('touchmove', function(e){
   var t = e.touches[0]; breeze(t.clientX, t.clientY);
 }, {passive:true});
-cakeWrap.addEventListener('pointerleave', calm);
-cakeWrap.addEventListener('touchend', calm, {passive:true});
 
 /* tapping still works, for anyone who doesn't swipe */
 cakeWrap.addEventListener('click', function(e){
   var c = e.target.closest('.candle');
-  if(!c || c.classList.contains('out')) c = cakeWrap.querySelector('.candle:not(.out)');
-  blowOut(c);
+  if(!c || !c.classList.contains('unlit')) c = cakeWrap.querySelector('.candle.unlit');
+  lightUp(c);
 });
 
 /* bouquet — a real photo, with the drawing as backup */
