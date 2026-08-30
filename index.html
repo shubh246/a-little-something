@@ -127,10 +127,11 @@
   .counter{margin-top:18px; font-family:"Caveat",cursive; font-size:1.5rem; color:var(--rose); min-height:1.6em}
 
   /* bouquet */
-  .bouquet{width:min(84vw,330px); margin-top:20px; cursor:pointer}
+  .bouquet{width:min(84vw,330px); margin-top:32px; cursor:pointer}
   .bouquet svg{width:100%; height:auto; display:block; filter:drop-shadow(0 18px 30px rgba(140,86,124,.22))}
   .bouquet img{width:100%; aspect-ratio:1/1; object-fit:cover; display:block; border-radius:22px;
     border:6px solid var(--card); box-shadow:0 18px 34px rgba(140,86,124,.26)}
+  .bouquet [hidden]{display:none}
   .bloom{transform-box:fill-box; transform-origin:center; opacity:0;
     animation:bloomIn .65s cubic-bezier(.2,1.5,.4,1) forwards; animation-delay:var(--d,0s)}
   @keyframes bloomIn{from{opacity:0; transform:scale(.15) rotate(-20deg)}
@@ -138,7 +139,8 @@
   .bouquetHold{display:inline-block; transition:transform .6s cubic-bezier(.2,.9,.3,1.2);
     animation:sway 6s ease-in-out infinite alternate}
   @keyframes sway{from{transform:rotate(-2deg)}to{transform:rotate(2deg)}}
-  .bouquetHold.taken{transform:translateY(-14px) scale(1.05) rotate(0deg); animation:none}
+  .bouquetHold.taken{transform:scale(1.04) rotate(0deg); animation:none}
+  #bqSub{min-height:2.6em}
 
   .gallery{width:100%; max-width:392px; margin-top:24px; position:relative}
   .card{background:var(--card); border:1px solid var(--line); border-radius:20px; box-shadow:var(--shadow);
@@ -335,9 +337,9 @@ const HER_NAME = "Palak";
 const WORDS = ["You", "are", "so", "special ❤️"];
 
 const PHOTOS = [
-  { url: "", caption: "that day" },
-  { url: "", caption: "ur smile 😘" },
-  { url: "", caption: "still my favourite" }
+  { url: "photo1.jpg", caption: "that day" },
+  { url: "photo2.jpg", caption: "ur smile 😘" },
+  { url: "photo3.jpg", caption: "still my favourite" }
 ];
 
 const LETTER = `Happy Birthday, Palak! ❤️
@@ -634,7 +636,7 @@ if(BOUQUET_IMG){
     var slot = document.getElementById('bqImg');
     slot.src = BOUQUET_IMG;
     slot.hidden = false;
-    document.getElementById('bqSvg').hidden = true;
+    document.getElementById('bqSvg').style.display = 'none';
   };
   bqTest.src = BOUQUET_IMG;
 }
